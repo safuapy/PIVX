@@ -108,7 +108,7 @@ jobs:
           message("::set-output name=timestamp::${current_date}")
 
       - name: ccache cache files
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: .ccache
           key: cmake-${{ matrix.config.name }}-ccache-${{ steps.ccache_cache_timestamp.outputs.timestamp }}
@@ -193,7 +193,7 @@ jobs:
           message("::set-output name=timestamp::${current_date}")
 
       - name: depends cache files
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             depends/built
@@ -352,7 +352,7 @@ jobs:
 
       - name: depends cache files
         if: matrix.config.no_depends != 1
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             depends/built
@@ -370,7 +370,7 @@ jobs:
           message("::set-output name=timestamp::${current_date}")
 
       - name: ccache cache files
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             .ccache
