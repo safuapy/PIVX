@@ -1,0 +1,38 @@
+name: Build PIVX on macOS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: macos-10.10
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        repository: safuapy/PIVX
+        ref: 2.2
+        path: pivx
+    - name: Install Homebrew and Dependencies
+      run: |
+        /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+        brew install autoconf automake berkeley-db4 libtool boost miniupnpc openssl pkg-config protobuf qt5
+    - name: Build PIVX
+      run: |
+        cd pivx
+        ./autogen.sh
+        ./configure --with-gui=qt5
+        make
+        make check
+        make install
+    - name: Create DMG
+      run: |
+        cd pivx
+        make deploy
+        hdiutil create -volname "PIVX" -srcfolder "./deploy/mac/PIVX-Qt.app" -ov -format UDZO "PIVX-Qt.dmg"
+    - name: Upload DMG Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: PIVX-Qt.dmg
+        path: pivx/PIVX-Qt.dmg
